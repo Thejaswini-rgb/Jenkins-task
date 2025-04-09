@@ -22,7 +22,11 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Skipping actual deploy step (no remote server configured)'
+                echo 'Deploying to Nginx Server via SCP...'
+                sh '''
+                    scp -o StrictHostKeyChecking=no -i ~/Downloads/nginx-key.pem build/html.zip ubuntu@13.218.128.42:/var/www/html/
+                    ssh -o StrictHostKeyChecking=no -i ~/Downloads/nginx-key.pem ubuntu@13.218.128.42 "cd /var/www/html && unzip -o html.zip && rm html.zip"
+                '''
             }
         }
     }
